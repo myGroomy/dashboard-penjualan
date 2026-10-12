@@ -1,0 +1,363 @@
+/* ========================================================
+   STYLE.CSS — Styling tambahan yang tidak praktis dengan Tailwind
+   Dashboard Penjualan 2023
+   ======================================================== */
+
+/* ---- Font Import ---- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---- Animasi Page Fade ---- */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-fade-in {
+  animation: pageFadeIn 0.22s ease-out forwards;
+}
+
+/* ---- Skeleton Loading ---- */
+@keyframes shimmer {
+  0%   { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 936px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 936px 100%;
+}
+
+/* ---- Scrollbar Custom ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ---- Tooltip ---- */
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  max-width: 240px;
+  white-space: normal;
+  text-align: center;
+  z-index: 100;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.tooltip-container:hover .tooltip-text,
+.tooltip-container:focus-within .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ---- Nav Link Aktif ---- */
+.nav-link.active {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+.nav-link.active .text-slate-500 {
+  color: #93c5fd;
+}
+
+/* ---- Card KPI ---- */
+.kpi-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.dark .kpi-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+/* ---- Tabel Data ---- */
+.data-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.data-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+.data-table th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.dark .data-table th {
+  background: #1e293b;
+}
+.data-table th:hover {
+  background: #f1f5f9;
+}
+.dark .data-table th:hover {
+  background: #334155;
+}
+.data-table td {
+  white-space: nowrap;
+}
+.data-table tr:hover td {
+  background: #f8fafc;
+}
+.dark .data-table tr:hover td {
+  background: #1e293b;
+}
+
+/* ---- Sort Indikator ---- */
+.sort-icon { display: inline-block; margin-left: 4px; }
+.sort-asc .sort-icon::after { content: ' ↑'; }
+.sort-desc .sort-icon::after { content: ' ↓'; }
+
+/* ---- Heatmap Korelasi ---- */
+.correlation-cell {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: transform 0.1s ease;
+  cursor: default;
+}
+.correlation-cell:hover {
+  transform: scale(1.15);
+  z-index: 2;
+  position: relative;
+}
+
+/* ---- Insight Box ---- */
+.insight-box {
+  border-left: 3px solid #3b82f6;
+  background: #eff6ff;
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #1e3a8a;
+  margin-bottom: 8px;
+}
+.dark .insight-box {
+  background: rgba(59,130,246,0.1);
+  border-left-color: #60a5fa;
+  color: #bfdbfe;
+}
+.insight-box.warning {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+  color: #92400e;
+}
+.dark .insight-box.warning {
+  background: rgba(245,158,11,0.1);
+  border-left-color: #fbbf24;
+  color: #fde68a;
+}
+.insight-box.success {
+  border-left-color: #10b981;
+  background: #ecfdf5;
+  color: #064e3b;
+}
+.dark .insight-box.success {
+  background: rgba(16,185,129,0.1);
+  border-left-color: #34d399;
+  color: #a7f3d0;
+}
+.insight-box.danger {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+.dark .insight-box.danger {
+  background: rgba(239,68,68,0.1);
+  border-left-color: #f87171;
+  color: #fecaca;
+}
+
+/* ---- Action Item Badge ---- */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.priority-high { background: #fee2e2; color: #b91c1c; }
+.priority-medium { background: #fef9c3; color: #92400e; }
+.priority-low { background: #dcfce7; color: #166534; }
+.dark .priority-high { background: rgba(239,68,68,0.15); color: #fca5a5; }
+.dark .priority-medium { background: rgba(245,158,11,0.15); color: #fde68a; }
+.dark .priority-low { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+
+/* ---- Waterfall Chart ---- */
+.waterfall-positive { color: #10b981; }
+.waterfall-negative { color: #ef4444; }
+
+/* ---- Outlier Badge ---- */
+.outlier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  background: #fff3cd;
+  color: #856404;
+}
+.dark .outlier-badge {
+  background: rgba(245,158,11,0.15);
+  color: #fde68a;
+}
+
+/* ---- Slider What-If ---- */
+.whatif-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  outline: none;
+  cursor: pointer;
+}
+.dark .whatif-slider { background: #475569; }
+.whatif-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: background 0.15s ease;
+}
+.whatif-slider::-webkit-slider-thumb:hover { background: #2563eb; }
+.whatif-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  border: none;
+}
+
+/* ---- Progress Bar ---- */
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+/* ---- Empty & Error State ---- */
+.empty-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  gap: 12px;
+}
+.empty-state svg, .error-state svg {
+  color: #94a3b8;
+}
+.dark .empty-state svg, .dark .error-state svg {
+  color: #64748b;
+}
+
+/* ---- Pagination ---- */
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  transition: background 0.1s, color 0.1s;
+}
+.dark .page-btn {
+  background: #1e293b;
+  border-color: #475569;
+  color: #94a3b8;
+}
+.page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.dark .page-btn:hover:not(:disabled) {
+  background: #334155;
+  color: #e2e8f0;
+}
+.page-btn.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- Responsive Chart Container ---- */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* ---- Confidence Interval Area ---- */
+.ci-area {
+  fill: rgba(59, 130, 246, 0.12);
+}
+
+/* ---- Tambahan responsif untuk sidebar ---- */
+@media (max-width: 1023px) {
+  #sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  #sidebar, #hamburger-btn, #dark-mode-btn, #reset-filter-btn { display: none !important; }
+  .lg\:ml-64 { margin-left: 0 !important; }
+}

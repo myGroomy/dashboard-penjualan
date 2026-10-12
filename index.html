@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Penjualan 2023</title>
+
+  <!-- Tailwind CSS CDN v3.4.1 -->
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+
+  <!-- Chart.js CDN v4.4.2 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- PapaParse CDN v5.4.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <script>
+    // Konfigurasi Tailwind dengan dark mode kelas
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            sidebar: {
+              DEFAULT: '#0f172a',
+              hover: '#1e293b',
+              active: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+
+  <!-- ==================== OVERLAY MOBILE ==================== -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden" aria-hidden="true"></div>
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside id="sidebar"
+    class="fixed top-0 left-0 h-full w-64 bg-sidebar z-30 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col shadow-2xl"
+    aria-label="Navigasi utama">
+
+    <!-- Logo / Judul -->
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-700">
+      <div class="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+      <div>
+        <div class="text-white font-semibold text-sm leading-tight">Dashboard Penjualan</div>
+        <div class="text-slate-400 text-xs">2023 Analytics</div>
+      </div>
+    </div>
+
+    <!-- Menu Navigasi -->
+    <nav class="flex-1 px-3 py-4 overflow-y-auto" role="navigation">
+      <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider px-3 mb-2">Analitik</div>
+      <ul class="space-y-1" role="list">
+        <li>
+          <a href="#/descriptive" class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-white transition-all duration-150"
+            data-page="descriptive" role="menuitem" aria-label="Halaman Descriptive: Apa yang terjadi?">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+              <div class="text-sm font-medium">Descriptive</div>
+              <div class="text-xs text-slate-500 group-hover:text-slate-400">Apa yang terjadi?</div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#/diagnostic" class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-white transition-all duration-150"
+            data-page="diagnostic" role="menuitem" aria-label="Halaman Diagnostic: Mengapa hal itu terjadi?">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <div>
+              <div class="text-sm font-medium">Diagnostic</div>
+              <div class="text-xs text-slate-500 group-hover:text-slate-400">Mengapa terjadi?</div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#/predictive" class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-white transition-all duration-150"
+            data-page="predictive" role="menuitem" aria-label="Halaman Predictive: Apa yang akan terjadi?">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <div>
+              <div class="text-sm font-medium">Predictive</div>
+              <div class="text-xs text-slate-500 group-hover:text-slate-400">Apa yang akan terjadi?</div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="#/prescriptive" class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-sidebar-hover hover:text-white transition-all duration-150"
+            data-page="prescriptive" role="menuitem" aria-label="Halaman Prescriptive: Apa yang harus dilakukan?">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <div class="text-sm font-medium">Prescriptive</div>
+              <div class="text-xs text-slate-500 group-hover:text-slate-400">Apa yang harus dilakukan?</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Divider -->
+      <div class="border-t border-slate-700 my-4"></div>
+      <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider px-3 mb-2">Filter Global</div>
+
+      <!-- Filter Region -->
+      <div class="px-3 mb-3">
+        <label for="filter-region" class="block text-slate-400 text-xs mb-1">Region</label>
+        <select id="filter-region" class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter berdasarkan region">
+          <option value="">Semua Region</option>
+          <option value="North">North</option>
+          <option value="South">South</option>
+          <option value="East">East</option>
+          <option value="West">West</option>
+        </select>
+      </div>
+
+      <!-- Filter Kategori Produk -->
+      <div class="px-3 mb-3">
+        <label for="filter-category" class="block text-slate-400 text-xs mb-1">Kategori Produk</label>
+        <select id="filter-category" class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter berdasarkan kategori produk">
+          <option value="">Semua Kategori</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Food">Food</option>
+          <option value="Electronics">Electronics</option>
+        </select>
+      </div>
+
+      <!-- Filter Tipe Customer -->
+      <div class="px-3 mb-3">
+        <label for="filter-customer" class="block text-slate-400 text-xs mb-1">Tipe Customer</label>
+        <select id="filter-customer" class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter berdasarkan tipe customer">
+          <option value="">Semua Tipe</option>
+          <option value="New">New</option>
+          <option value="Returning">Returning</option>
+        </select>
+      </div>
+
+      <!-- Filter Sales Channel -->
+      <div class="px-3 mb-3">
+        <label for="filter-channel" class="block text-slate-400 text-xs mb-1">Sales Channel</label>
+        <select id="filter-channel" class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter berdasarkan sales channel">
+          <option value="">Semua Channel</option>
+          <option value="Online">Online</option>
+          <option value="Retail">Retail</option>
+        </select>
+      </div>
+
+      <!-- Filter Rentang Tanggal -->
+      <div class="px-3 mb-3">
+        <label for="filter-date-start" class="block text-slate-400 text-xs mb-1">Tanggal Mulai</label>
+        <input type="date" id="filter-date-start" min="2023-01-01" max="2023-12-31"
+          class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter tanggal mulai" />
+      </div>
+      <div class="px-3 mb-4">
+        <label for="filter-date-end" class="block text-slate-400 text-xs mb-1">Tanggal Akhir</label>
+        <input type="date" id="filter-date-end" min="2023-01-01" max="2023-12-31"
+          class="w-full bg-slate-800 text-slate-200 text-sm rounded-md border border-slate-600 px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Filter tanggal akhir" />
+      </div>
+    </nav>
+
+    <!-- Footer Sidebar -->
+    <div class="px-6 py-3 border-t border-slate-700">
+      <div id="data-quality-info" class="text-xs text-slate-500">Memuat data...</div>
+    </div>
+  </aside>
+
+  <!-- ==================== KONTEN UTAMA ==================== -->
+  <div class="lg:ml-64 flex flex-col min-h-full">
+
+    <!-- TOPBAR -->
+    <header class="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center gap-3 shadow-sm" role="banner">
+      <!-- Tombol Hamburger (Mobile) -->
+      <button id="hamburger-btn"
+        class="lg:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+        aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Judul Halaman -->
+      <div class="flex-1 min-w-0">
+        <h1 id="page-title" class="text-base font-semibold text-slate-800 dark:text-slate-100 truncate">Descriptive Analytics</h1>
+        <div id="record-count" class="text-xs text-slate-500 dark:text-slate-400">Memuat...</div>
+      </div>
+
+      <!-- Tombol Reset Filter -->
+      <button id="reset-filter-btn"
+        class="hidden items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors"
+        aria-label="Reset semua filter">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Reset Filter
+      </button>
+
+      <!-- Toggle Dark Mode -->
+      <button id="dark-mode-btn"
+        class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+        aria-label="Toggle dark mode">
+        <svg id="icon-moon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg id="icon-sun" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- AREA KONTEN HALAMAN (SPA) -->
+    <main id="page-content" class="flex-1 p-4 md:p-6" role="main" aria-live="polite">
+      <!-- Konten dirender oleh JavaScript -->
+      <div id="loading-global" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <div class="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+        <div class="text-slate-500 dark:text-slate-400 text-sm">Memuat data penjualan...</div>
+      </div>
+    </main>
+
+    <!-- UPLOAD FALLBACK (muncul jika fetch gagal) -->
+    <div id="upload-fallback" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">Upload File CSV</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">
+            Browser memblokir akses file lokal melalui protokol <code class="bg-slate-100 dark:bg-slate-700 px-1 rounded text-xs">file://</code>.
+          </p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
+            Jalankan lewat server lokal: <code class="bg-slate-100 dark:bg-slate-700 px-1 rounded text-xs">python -m http.server 8080</code>
+            lalu buka <code class="bg-slate-100 dark:bg-slate-700 px-1 rounded text-xs">http://localhost:8080</code>,
+            atau upload file CSV di bawah ini.
+          </p>
+          <label for="csv-upload" class="cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-xl transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Pilih File CSV
+          </label>
+          <input type="file" id="csv-upload" accept=".csv" class="hidden" aria-label="Upload file CSV 200_sales_data.csv" />
+          <p class="text-xs text-slate-400 mt-4">File: <code>200_sales_data.csv</code></p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main layout -->
+
+  <script src="script.js"></script>
+</body>
+</html>
